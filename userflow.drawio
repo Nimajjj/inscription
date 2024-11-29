@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram id="UvcFkWX6laPh-kmnir3H" name="Page-1">
-        <mxGraphModel dx="978" dy="1345" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+        <mxGraphModel dx="1865" dy="1143" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -37,13 +37,13 @@
                 <mxCell id="16" style="edgeStyle=none;html=1;" parent="1" source="4" target="15" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="4" value="Add" style="html=1;" parent="1" vertex="1">
+                <mxCell id="4" value="add" style="html=1;" parent="1" vertex="1">
                     <mxGeometry x="190" y="435" width="110" height="50" as="geometry"/>
                 </mxCell>
-                <mxCell id="36" style="edgeStyle=none;html=1;" edge="1" parent="1" source="5" target="34">
+                <mxCell id="36" style="edgeStyle=none;html=1;" parent="1" source="5" target="34" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="37" style="edgeStyle=orthogonalEdgeStyle;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="5" target="35">
+                <mxCell id="37" style="edgeStyle=orthogonalEdgeStyle;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="5" target="35" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
                 <mxCell id="5" value="update" style="html=1;" parent="1" vertex="1">
@@ -73,7 +73,7 @@
                 <mxCell id="27" style="edgeStyle=none;html=1;" parent="1" source="23" target="26" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="42" value="yes" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="27">
+                <mxCell id="42" value="yes" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="27" vertex="1" connectable="0">
                     <mxGeometry x="-0.3871" y="1" relative="1" as="geometry">
                         <mxPoint as="offset"/>
                     </mxGeometry>
@@ -85,7 +85,7 @@
                         </Array>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="45" value="no" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="29">
+                <mxCell id="45" value="no" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="29" vertex="1" connectable="0">
                     <mxGeometry x="0.0497" relative="1" as="geometry">
                         <mxPoint x="18" as="offset"/>
                     </mxGeometry>
@@ -111,43 +111,43 @@
                 <mxCell id="33" value="php src/app.php delete abc123" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="30" vertex="1">
                     <mxGeometry y="90" width="190" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="38" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" parent="1" source="34" target="19">
+                <mxCell id="38" style="edgeStyle=orthogonalEdgeStyle;html=1;" parent="1" source="34" target="19" edge="1">
                     <mxGeometry relative="1" as="geometry">
                         <Array as="points">
                             <mxPoint x="640" y="550"/>
                         </Array>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="41" value="yes" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="38">
+                <mxCell id="41" value="yes" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="38" vertex="1" connectable="0">
                     <mxGeometry x="0.2707" y="-3" relative="1" as="geometry">
                         <mxPoint x="-77" y="-3" as="offset"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="34" value="mail is updated" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                <mxCell id="34" value="mail is updated" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="400" y="510" width="80" height="80" as="geometry"/>
                 </mxCell>
-                <mxCell id="39" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" parent="1" source="35" target="19">
+                <mxCell id="39" style="edgeStyle=orthogonalEdgeStyle;html=1;" parent="1" source="35" target="19" edge="1">
                     <mxGeometry relative="1" as="geometry">
                         <Array as="points">
                             <mxPoint x="640" y="690"/>
                         </Array>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="40" value="yes" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="39">
+                <mxCell id="40" value="yes" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="39" vertex="1" connectable="0">
                     <mxGeometry x="-0.1252" y="-3" relative="1" as="geometry">
                         <mxPoint x="-46" y="-3" as="offset"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="35" value="pwd is updated" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                <mxCell id="35" value="pwd is updated" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="400" y="650" width="80" height="80" as="geometry"/>
                 </mxCell>
-                <mxCell id="52" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" parent="1" source="50" target="51">
+                <mxCell id="52" style="edgeStyle=orthogonalEdgeStyle;html=1;" parent="1" source="50" target="51" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="50" value="A news has &lt;br&gt;been created" style="html=1;" vertex="1" parent="1">
+                <mxCell id="50" value="A news has &lt;br&gt;been created" style="html=1;" parent="1" vertex="1">
                     <mxGeometry x="190" y="980" width="110" height="50" as="geometry"/>
                 </mxCell>
-                <mxCell id="51" value="Send mail to &lt;br&gt;all users" style="html=1;" vertex="1" parent="1">
+                <mxCell id="51" value="Send mail to &lt;br&gt;all users" style="html=1;" parent="1" vertex="1">
                     <mxGeometry x="360" y="980" width="110" height="50" as="geometry"/>
                 </mxCell>
             </root>
