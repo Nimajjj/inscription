@@ -26,8 +26,6 @@ final class User
         $this->createdAt = $createdAt ?: new \DateTimeImmutable();
     }
 
-    // === Getters et Setters ===
-
     public function getId(): ?UID
     {
         return $this->id;
