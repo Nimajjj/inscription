@@ -11,5 +11,7 @@
             "email": "benjamin.borello@aol.com"
         }
     ],
-    "require": {}
+    "require": {
+      "ext-json": "*"
+    }
 }

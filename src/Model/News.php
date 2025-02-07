@@ -1,20 +1,20 @@
 <?php
 
 namespace App\Model;
-use App\VO\UID;
+use App\VO\Uid;
 
 final class News
 {
-    private ?UID $id;
+    private ?Uid $id;
     private string $content;
     private \DateTimeImmutable $created_at;
 
-    public function getId(): UID
+    public function getId(): Uid
     {
         return $this->id;
     }
 
-    public function setId(?UID $id): News
+    public function setId(?Uid $id): News
     {
         $this->id = $id;
         return $this;

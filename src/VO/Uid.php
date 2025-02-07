@@ -4,7 +4,7 @@ namespace App\VO;
 
 use Random\RandomException;
 
-final class UID
+final class Uid
 {
     private string $value;
 

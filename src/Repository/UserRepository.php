@@ -8,7 +8,7 @@ use App\Model\User;
 use App\Query\QueryAction;
 use App\Query\QueryBuilder;
 use App\Query\QueryCondition;
-use App\VO\UID;
+use App\VO\Uid;
 use DateMalformedStringException;
 
 final class UserRepository
@@ -56,7 +56,7 @@ final class UserRepository
 
         $outResult = $results[0];
         return (new User())
-        ->setId(new UID($outResult['id']))
+        ->setId(new Uid($outResult['id']))
             ->setEmail($outResult['email'])
             ->setLogin($outResult['login'])
             ->setPassword($outResult['password'])

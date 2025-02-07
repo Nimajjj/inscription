@@ -3,7 +3,7 @@
 namespace App\Query;
 use App\Query\QueryAction;
 use App\Utils\EnumsUtils;
-use App\VO\UID;
+use App\VO\Uid;
 
 final class Query
 {

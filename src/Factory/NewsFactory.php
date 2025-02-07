@@ -3,14 +3,15 @@
 namespace App\Factory;
 
 use App\Model\News;
-use App\VO\UID;
+use App\VO\Uid;
 use DateMalformedStringException;
+use Random\RandomException;
 
 final class NewsFactory implements IDataModelFactory
 {
     public function createNews(
-        ?UID $uid,
-        string $content,
+        ?Uid               $uid,
+        string             $content,
         \DateTimeImmutable $createdAt
     ): News {
         if (empty($content)) {
@@ -25,12 +26,12 @@ final class NewsFactory implements IDataModelFactory
     }
 
     /**
-     * @throws DateMalformedStringException
+     * @throws DateMalformedStringException|RandomException
      */
     public function create(array $data): News
     {
         return $this->createNews(
-            isset($data['id']) ? new UID($data['id']) : null,
+            isset($data['id']) ? new Uid($data['id']) : null,
             $data['content'] ?? '',
             isset($data['created_at']) ? new \DateTimeImmutable($data['created_at']) : new \DateTimeImmutable()
         );

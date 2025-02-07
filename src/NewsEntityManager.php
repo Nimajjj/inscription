@@ -2,7 +2,7 @@
 
 namespace App;
 
-use App\VO\UID;
+use App\VO\Uid;
 use App\Model\News;
 use App\Adapter\MySQLAdapter;
 use App\Query\QueryBuilder;
@@ -26,7 +26,7 @@ final class NewsEntityManager
     /**
      * @throws DateMalformedStringException
      */
-    public function getByID(UID $id): News
+    public function getByID(Uid $id): News
     {
         return $this->repository->getById($id);
     }

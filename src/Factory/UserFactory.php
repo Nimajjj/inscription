@@ -3,16 +3,16 @@
 namespace App\Factory;
 
 use App\Model\User;
-use App\VO\UID;
+use App\VO\Uid;
 use DateMalformedStringException;
 
 final class UserFactory implements IDataModelFactory {
 
     public function createUser(
-        ?UID $uid,
-        string $login,
-        string $email,
-        string $password,
+        ?Uid               $uid,
+        string             $login,
+        string             $email,
+        string             $password,
         \DateTimeImmutable $createdAt
     ): User {
         if (empty($login) || empty($email) || empty($password)) {
@@ -38,7 +38,7 @@ final class UserFactory implements IDataModelFactory {
     public function create(array $data): User
     {
         return $this->createUser(
-            isset($data['id']) ? new UID($data['id']) : null,
+            isset($data['id']) ? new Uid($data['id']) : null,
             $data['login'] ?? '',
             $data['email'] ?? '',
             $data['password'] ?? '',

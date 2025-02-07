@@ -2,36 +2,36 @@
 
 namespace App\Model;
 
-use App\VO\UID;
+use App\VO\Uid;
 
 final class User
 {
-    private ?UID $id;
+    private ?Uid $id;
     private string $login;
     private string $email;
     private string $password;
     private \DateTimeImmutable $createdAt;
     
     public function __construct(
-        ?UID $id = null,
-        string $login = '',
-        string $email = '',
-        string $password = '',
+        ?Uid                $id = null,
+        string              $login = '',
+        string              $email = '',
+        string              $password = '',
         ?\DateTimeImmutable $createdAt = null
     ) {
-        $this->id = $id ?: new UID();
+        $this->id = $id ?: new Uid();
         $this->login = $login;
         $this->email = $email;
         $this->password = $password;
         $this->createdAt = $createdAt ?: new \DateTimeImmutable();
     }
 
-    public function getId(): ?UID
+    public function getId(): ?Uid
     {
         return $this->id;
     }
 
-    public function setId(?UID $id): self
+    public function setId(?Uid $id): self
     {
         $this->id = $id;
         return $this;

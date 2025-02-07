@@ -8,7 +8,7 @@ use App\Query\QueryAction;
 use App\Query\QueryCondition;
 use App\Query\QueryBuilder;
 use App\Query\QueryLogicalOperator;
-use App\VO\UID;
+use App\VO\Uid;
 use DateMalformedStringException;
 use RuntimeException;
 
@@ -59,7 +59,7 @@ class NewsRepository {
         $data = $result[0];
 
         return (new News())
-            ->setId(new UID($data['id']))
+            ->setId(new Uid($data['id']))
             ->setContent($data['content'])
             ->setCreatedAt(new \DateTimeImmutable($data['created_at']));
     }
