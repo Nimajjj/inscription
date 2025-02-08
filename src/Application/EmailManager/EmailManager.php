@@ -11,8 +11,8 @@ use PHPMailer\PHPMailer\Exception;
 
 final class EmailManager
 {
-    private const string MY_EMAIL = 'smtpprovider180@gmail.com';
-    private const string MY_APP_PASSWORD = 'qpjhnfugcyvasnyq'; // hahaha i dont give a shit
+    private const MY_EMAIL = 'smtpprovider180@gmail.com';
+    private const MY_APP_PASSWORD = 'qpjhnfugcyvasnyq'; // hahaha i dont give a shit
 
     /**
      * Sends an email to the specified address using PHPMailer.
@@ -45,6 +45,7 @@ final class EmailManager
 
         try
         {
+            echo "[ INFO] Sending email to " . $email . PHP_EOL;
             // Set PHPMailer to use SMTP
             $mail->isSMTP();
             $mail->Host       = 'smtp.gmail.com';

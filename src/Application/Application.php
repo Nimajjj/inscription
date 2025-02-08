@@ -175,7 +175,9 @@ final class Application
     private function onUserCreated(EventUserCreated $event): void
     {
         echo "[DEBUG] Event callback onUserCreated : " . $event->getUser() . PHP_EOL;
-        $this->emailManager->send($event->getUser()->getEmail(), "Welcome !", "This is a welcome message for " . $event->getUser()->getLogin() . PHP_EOL);
+
+        $this->sendWelcomeEmail($event->getUser());
+
     }
 
     private function onUserUpdated(): void
@@ -191,5 +193,23 @@ final class Application
     private function onNewsCreated(): void
     {
         echo "[DEBUG] Event callback onNewsCreated" . PHP_EOL;
+    }
+
+    ###################### HELPERS ######################
+    private function sendWelcomeEmail(User $user): void
+    {
+        $WELCOM_MESSAGE_1 = "This is a welcome message for " . $user->getLogin() . PHP_EOL;
+        $WELCOM_MESSAGE_2 = "Say welcome to our new user : " . $user->getLogin() . PHP_EOL;
+
+        $this->emailManager->send($user->getEmail(), "Welcome !", $WELCOM_MESSAGE_1);
+
+        foreach ($this->userManager->getAllEmails() as $email)
+        {
+            if ($email == $user->getEmail())
+            {
+                continue;
+            }
+            $this->emailManager->send($email, "A new user as joined the team", $WELCOM_MESSAGE_2);
+        }
     }
 }

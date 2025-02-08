@@ -127,4 +127,14 @@ final class UserEntityManager implements IEntityManager
         $this->adapter->executeQuery($query, $__);
         $this->eventManager->notify(new EventUserDeleted($user));
     }
+
+    /**
+     * Retrieves the email addresses of all users from the database.
+     *
+     * @return string[] Returns an array of email addresses.
+     */
+    public function getAllEmails(): array
+    {
+        return $this->repository->getAllEmails();
+    }
 }

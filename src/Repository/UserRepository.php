@@ -142,4 +142,30 @@ final class UserRepository
             ->setPassword($outResult['password'])
             ->setCreatedAt(new \DateTimeImmutable($outResult['created_at']));
     }
+
+    /**
+     * Retrieves the email addresses of all users from the database.
+     *
+     * @return string[] Returns an array of email addresses.
+     */
+    public function getAllEmails(): array
+    {
+        $query = (new QueryBuilder())
+            ->buildAction(QueryAction::SELECT)
+            ->buildTable("users")
+            ->buildColumns(["email"])
+            ->build();
+
+        $results = [];
+        $this->adapter->executeQuery($query, $results);
+
+        $emails = [];
+        foreach ($results as $row) {
+            if (isset($row['email'])) {
+                $emails[] = $row['email'];
+            }
+        }
+
+        return $emails;
+    }
 }
