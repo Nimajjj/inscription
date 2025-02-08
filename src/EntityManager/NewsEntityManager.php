@@ -46,7 +46,7 @@ final class NewsEntityManager implements IEntityManager
     /**
      * @throws Exception
      */
-    public function create(News|\App\Model\DataModel $news): ?News
+    public function create(News|\App\Model\DataModel $news): News
     {
         $query = (new QueryBuilder())
             ->buildAction(QueryAction::INSERT)
@@ -56,17 +56,8 @@ final class NewsEntityManager implements IEntityManager
             ->build();
         echo "[INFO] Executing " . $query->toRawSql() . "\n";
 
-        try
-        {
-            $__ = [];
-            $error = $this->adapter->executeQuery($query, $__);
-        }
-        catch (Exception $e)
-        {
-             # TODO : emit failed event
-            return null;
-        }
-
+        $__ = [];
+        $this->adapter->executeQuery($query, $__);
         $this->eventManager->notify(new EventNewsCreated($news));
         return $news;
     }

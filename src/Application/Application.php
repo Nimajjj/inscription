@@ -2,17 +2,20 @@
 
 namespace App\Application;
 
-use App\App\Manager\NewsEntityManager;
 use App\Application\CommandParser\CommandParser;
 use App\Application\Enum\ApplicationCommand;
 use App\Application\JsonHandler\JsonHandler;
+use App\Application\EmailManager\EmailManager;
 use App\EntityManager\UserEntityManager;
+use App\EntityManager\NewsEntityManager;
 use App\Event\EventManager;
 use App\Event\Events\EventNewsCreated;
 use App\Event\Events\EventUserCreated;
 use App\Event\Events\EventUserUpdated;
 use App\Event\Events\EventUserDeleted;
+use App\Event\IEvent;
 use App\Model\User;
+use App\Model\Event;
 use App\VO\Uid;
 
 
@@ -23,6 +26,7 @@ final class Application
     private NewsEntityManager $newsManager;
     private UserEntityManager $userManager;
     private EventManager $eventManager;
+    private EmailManager $emailManager;
 
 
     public function __construct(array $argv)
@@ -35,14 +39,16 @@ final class Application
             ->addCommand("delete", ApplicationCommand::DELETE);
 
         $this->eventManager = (new EventManager())
-            ->subscribe(new EventUserCreated(null), function() { $this->onUserCreated(); })
-            ->subscribe(new EventUserUpdated(null), function() { $this->onUserUpdated(); })
-            ->subscribe(new EventUserDeleted(null), function() { $this->onUserDeleted(); })
-            ->subscribe(new EventNewsCreated(null), function() { $this->onNewsCreated(); });
+            ->subscribe(new EventUserCreated(null), function(IEvent $event) { $this->onUserCreated($event); })
+            ->subscribe(new EventUserUpdated(null), function(IEvent $event) { $this->onUserUpdated($event); })
+            ->subscribe(new EventUserDeleted(null), function(IEvent $event) { $this->onUserDeleted($event); })
+            ->subscribe(new EventNewsCreated(null), function(IEvent $event) { $this->onNewsCreated($event); });
 
         $this->newsManager = new NewsEntityManager($this->eventManager);
 
         $this->userManager = new UserEntityManager($this->eventManager);
+
+        $this->emailManager = new EmailManager();
     }
 
     public function main(): void
@@ -166,9 +172,10 @@ final class Application
     }
 
     ###################### EVENTS CALLBACKS ######################
-    private function onUserCreated(): void
+    private function onUserCreated(EventUserCreated $event): void
     {
-        echo "[DEBUG] Event callback onUserCreated" . PHP_EOL;
+        echo "[DEBUG] Event callback onUserCreated : " . $event->getUser() . PHP_EOL;
+        $this->emailManager->send($event->getUser()->getEmail(), "Welcome !", "This is a welcome message for " . $event->getUser()->getLogin() . PHP_EOL);
     }
 
     private function onUserUpdated(): void
