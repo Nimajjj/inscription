@@ -23,6 +23,49 @@ final class UserRepository
     /**
      * @throws DateMalformedStringException
      */
+    public final function getById(Uid $id): User
+    {
+        $user = $this->findById($id);
+
+        if (!$user)
+        {
+            throw new \RuntimeException("No user found for id: $id");
+        }
+
+        return $user;
+    }
+
+    /**
+     * @throws DateMalformedStringException
+     */
+    public function findById(Uid $id): ?User
+    {
+        $query = (new QueryBuilder())
+            ->buildAction(QueryAction::SELECT)
+            ->buildTable("users")
+            ->buildColumns(["id", "login", "email", "password", "created_at"])
+            ->buildCondition("id", QueryCondition::IS_EQUAL, $id->getValue())
+            ->build();
+
+        $results = [];
+        $this->adapter->executeQuery($query, $results);
+
+        if (empty($results)) {
+            return null;
+        }
+
+        $outResult = $results[0];
+        return (new User())
+            ->setId(new Uid($outResult['id']))
+            ->setEmail($outResult['email'])
+            ->setLogin($outResult['login'])
+            ->setPassword($outResult['password'])
+            ->setCreatedAt(new \DateTimeImmutable($outResult['created_at']));
+    }
+
+    /**
+     * @throws DateMalformedStringException
+     */
     public final function getByEmail(string $email): User
     {
         $user = $this->findByEmail($email);

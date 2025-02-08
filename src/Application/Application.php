@@ -13,6 +13,7 @@ use App\Event\Events\EventUserCreated;
 use App\Event\Events\EventUserUpdated;
 use App\Event\Events\EventUserDeleted;
 use App\Model\User;
+use App\VO\Uid;
 
 
 final class Application
@@ -150,6 +151,17 @@ final class Application
         {
             echo "[ERROR] Input file is invalid !" . PHP_EOL;
             return;
+        }
+
+        try
+        {
+            $user = $this->userManager->getById(new UID($data["id"]));
+            echo "[DEBUG] " . $user . PHP_EOL;
+            $this->userManager->delete($user);
+        }
+        catch (\Exception $e)
+        {
+            echo "[ERROR] " . $e->getMessage() . PHP_EOL;
         }
     }
 

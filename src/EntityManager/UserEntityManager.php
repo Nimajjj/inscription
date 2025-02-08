@@ -31,8 +31,7 @@ final class UserEntityManager implements IEntityManager
 
     public function getById(UID $id): User
     {
-//        return $this->repository->getById($id);
-        return new User(); // TODO : implement getById
+        return $this->repository->getById($id);
     }
 
     public function getByEmail(string $email): User
@@ -71,9 +70,8 @@ final class UserEntityManager implements IEntityManager
             ])
             ->build();
 
-        $outResult = [];
-        $this->adapter->executeQuery($query, $outResult);
-
+        $__ = [];
+        $this->adapter->executeQuery($query, $__);
         $this->eventManager->notify(new EventUserCreated($user));
         return $user;
     }
@@ -105,9 +103,8 @@ final class UserEntityManager implements IEntityManager
         // Debug : Afficher la requête générée
         echo "Requête générée : " . $query->toRawSql() . PHP_EOL;
 
-        $outResult = [];
-        $this->adapter->executeQuery($query, $outResult);
-
+        $__ = [];
+        $this->adapter->executeQuery($query, $__);
         $this->eventManager->notify(new EventUserUpdated($user));
         return $user;
     }
@@ -127,14 +124,7 @@ final class UserEntityManager implements IEntityManager
             ->build();
 
         $__ = [];
-        $error = $this->adapter->executeQuery($query, $__);
-
-        if ($error !== false) {
-            throw new Exception(
-                "Failed to execute query: " . $query->toRawSql() . " Error details: " . var_export(true, true)
-            );
-        }
-
+        $this->adapter->executeQuery($query, $__);
         $this->eventManager->notify(new EventUserDeleted($user));
     }
 }
