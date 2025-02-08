@@ -5,6 +5,8 @@ namespace App\EntityManager;
 use App\Adapter\MySQLAdapter;
 use App\Event\EventManager;
 use App\Event\Events\EventUserCreated;
+use App\Event\Events\EventUserUpdated;
+use App\Event\Events\EventUserDeleted;
 use App\Model\News;
 use App\Model\User;
 use App\Query\QueryAction;
@@ -36,6 +38,11 @@ final class UserEntityManager implements IEntityManager
     public function getByEmail(string $email): User
     {
         return $this->repository->getByEmail($email);
+    }
+
+    public function getByLogin(string $login): User
+    {
+        return $this->repository->getByLogin($login);
     }
 
 
@@ -101,6 +108,7 @@ final class UserEntityManager implements IEntityManager
         $outResult = [];
         $this->adapter->executeQuery($query, $outResult);
 
+        $this->eventManager->notify(new EventUserUpdated($user));
         return $user;
     }
 
@@ -126,5 +134,7 @@ final class UserEntityManager implements IEntityManager
                 "Failed to execute query: " . $query->toRawSql() . " Error details: " . var_export(true, true)
             );
         }
+
+        $this->eventManager->notify(new EventUserDeleted($user));
     }
 }

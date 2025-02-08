@@ -103,6 +103,7 @@ final class Application
         catch (\Exception $e)
         {
             echo "[ERROR] " . $e->getMessage() . PHP_EOL;
+            return;
         }
     }
 
@@ -113,6 +114,34 @@ final class Application
             echo "[ERROR] Input file is invalid !" . PHP_EOL;
             return;
         }
+
+        try
+        {
+           $user = $this->userManager->getByEmail($data["email"]);
+           $user->setLogin($data["login"]);
+           $user->setPassword($data["password"]);
+           $this->userManager->update($user);
+           return;
+        }
+        catch (\Exception $e)
+        {
+            echo "[DEBUG] No user found for email " . $data["email"] . PHP_EOL;
+        }
+
+        try
+        {
+            $user = $this->userManager->getByLogin($data["login"]);
+            $user->setEmail($data["email"]);
+            $user->setPassword($data["password"]);
+            $this->userManager->update($user);
+            return;
+        }
+        catch (\Exception $e)
+        {
+            echo "[DEBUG] No user found for login " . $data["login"] . PHP_EOL;
+        }
+
+        echo "[ERROR] No user has been found with provided data" . PHP_EOL;
     }
 
     private function deleteUser(array $data): void
