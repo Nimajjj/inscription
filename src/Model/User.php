@@ -2,36 +2,36 @@
 
 namespace App\Model;
 
-use App\VO\Uid;
+use App\VO\UID;
 
-final class User
+final class User implements DataModel
 {
-    private ?Uid $id;
+    private ?UID $id;
     private string $login;
     private string $email;
     private string $password;
     private \DateTimeImmutable $createdAt;
     
     public function __construct(
-        ?Uid                $id = null,
-        string              $login = '',
-        string              $email = '',
-        string              $password = '',
+        ?UID $id = null,
+        string $login = '',
+        string $email = '',
+        string $password = '',
         ?\DateTimeImmutable $createdAt = null
     ) {
-        $this->id = $id ?: new Uid();
+        $this->id = $id ?: new UID();
         $this->login = $login;
         $this->email = $email;
         $this->password = $password;
         $this->createdAt = $createdAt ?: new \DateTimeImmutable();
     }
 
-    public function getId(): ?Uid
+    public function getId(): UID
     {
         return $this->id;
     }
 
-    public function setId(?Uid $id): self
+    public function setId(UID $id): self
     {
         $this->id = $id;
         return $this;

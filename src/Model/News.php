@@ -3,7 +3,7 @@
 namespace App\Model;
 use App\VO\Uid;
 
-final class News
+final class News implements DataModel
 {
     private ?Uid $id;
     private string $content;

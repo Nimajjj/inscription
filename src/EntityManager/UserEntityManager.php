@@ -1,32 +1,50 @@
 <?php
 
-namespace App;
+namespace App\EntityManager;
 
-use App\Model\User;
 use App\Adapter\MySQLAdapter;
-use App\Query\QueryBuilder;
+use App\Event\EventManager;
+use App\Event\Events\EventUserCreated;
+use App\Model\News;
+use App\Model\User;
 use App\Query\QueryAction;
+use App\Query\QueryBuilder;
 use App\Query\QueryCondition;
 use App\Repository\UserRepository;
+use App\VO\UID;
 use Exception;
 
-final class UserEntityManager
+final class UserEntityManager implements IEntityManager
 {
+    private EventManager $eventManager;
     private MySQLAdapter $adapter;
     private UserRepository $repository;
 
-    public function __construct()
+    public function __construct(EventManager $eventManager)
     {
+        $this->eventManager = $eventManager;
         $this->adapter = new MySQLAdapter();
         $this->repository = new UserRepository($this->adapter);
     }
+
+    public function getById(UID $id): User
+    {
+//        return $this->repository->getById($id);
+        return new User(); // TODO : implement getById
+    }
+
+    public function getByEmail(string $email): User
+    {
+        return $this->repository->getByEmail($email);
+    }
+
 
     /**
      * Création d'un utilisateur avec vérification d'email.
      *
      * @throws Exception
      */
-    public function create(User $user): User
+    public function create(User|\App\Model\DataModel $user): User
     {
         $existingUser = $this->repository->findByEmail($user->getEmail());
         if ($existingUser) {
@@ -48,13 +66,15 @@ final class UserEntityManager
 
         $outResult = [];
         $this->adapter->executeQuery($query, $outResult);
+
+        $this->eventManager->notify(new EventUserCreated($user));
         return $user;
     }
 
     /**
      * @throws Exception
      */
-    public function update(User $user): User
+    public function update(User|\App\Model\DataModel $user): User
     {
         // Vérifier si un autre utilisateur utilise le même email
         $existingUser = $this->repository->findByEmail($user->getEmail());
@@ -87,7 +107,7 @@ final class UserEntityManager
     /**
      * @throws Exception
      */
-    public function delete(User $user): void {
+    public function delete(User|\App\Model\DataModel $user): void {
         if (!$user->getId()) {
             throw new Exception("User ID is not set");
         }

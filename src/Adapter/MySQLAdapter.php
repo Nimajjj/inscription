@@ -11,6 +11,11 @@ final class MySQLAdapter implements IAdapter
 {
     private ?PDO $database = null;
 
+    /***
+     * @param Query $query
+     * @param array $outResult
+     * @return bool false if an error occured else true
+     */
     public function executeQuery(Query $query, array &$outResult): bool
     {
         $rawQuery = $query->toRawSql();
@@ -18,6 +23,20 @@ final class MySQLAdapter implements IAdapter
         assert($statement, "Error while preparing the query: '$rawQuery'");
 
         $error = $statement->execute();
+
+        // Check if the execution failed
+        if (!$error)
+        {
+            // Retrieve error details from the PDO statement
+            $errorInfo = $statement->errorInfo();
+            // Log or display the error details as needed
+            echo "Error executing query:\n";
+            echo "SQLSTATE Code: " . $errorInfo[0] . "\n";
+            echo "Driver Error Code: " . $errorInfo[1] . "\n";
+            echo "Error Message: " . $errorInfo[2] . "\n";
+
+            throw new Exception("Failed to execute query: " . $query->toRawSql() . "\n");
+        }
 
         if ($query->action === QueryAction::SELECT)
         {
@@ -54,7 +73,7 @@ final class MySQLAdapter implements IAdapter
             $username = $obj->username ?? null;
             $password = $obj->password ?? null;
 
-            if (!$host || !$dbname || !$username || !$password) {
+            if (!$host || !$dbname || !$username) {
                 throw new RuntimeException("Incomplete database credentials provided in: $file");
             }
 

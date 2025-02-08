@@ -1,24 +1,36 @@
 <?php
 
-namespace App;
+namespace App\EntityManager;
 
-use App\VO\Uid;
-use App\Model\News;
 use App\Adapter\MySQLAdapter;
-use App\Query\QueryBuilder;
+use App\Event\EventManager;
+use App\Event\Events\EventNewsCreated;
+use App\Model\News;
 use App\Query\QueryAction;
+use App\Query\QueryBuilder;
 use App\Query\QueryCondition;
 use App\Repository\NewsRepository;
+use App\VO\UID;
 use DateMalformedStringException;
 use Exception;
 
-final class NewsEntityManager
+const NEWS_TABLE = "news";
+const NEWS_COLUMN_ID = "id";
+const NEWS_COLUMN_CONTENT = "content";
+const NEWS_COLUMN_CREATED_AT = "created_at";
+
+const NEWS_COLUMNS = [NEWS_COLUMN_ID, NEWS_COLUMN_CONTENT, NEWS_COLUMN_CREATED_AT];
+
+
+final class NewsEntityManager implements IEntityManager
 {
+    private EventManager $eventManager;
     private MySQLAdapter $adapter;
     private NewsRepository $repository;
 
-    public function __construct()
+    public function __construct(EventManager $eventManager)
     {
+        $this->eventManager = $eventManager;
         $this->adapter = new MySQLAdapter();
         $this->repository = new NewsRepository($this->adapter);
     }
@@ -26,7 +38,7 @@ final class NewsEntityManager
     /**
      * @throws DateMalformedStringException
      */
-    public function getByID(Uid $id): News
+    public function getByID(UID $id): News
     {
         return $this->repository->getById($id);
     }
@@ -34,45 +46,49 @@ final class NewsEntityManager
     /**
      * @throws Exception
      */
-    public function create(News $news): News
+    public function create(News|\App\Model\DataModel $news): ?News
     {
         $query = (new QueryBuilder())
             ->buildAction(QueryAction::INSERT)
-            ->buildTable("News")
-            ->buildColumns(["id", "content", "created_at"])
+            ->buildTable(NEWS_TABLE)
+            ->buildColumns(NEWS_COLUMNS)
             ->buildValues([$news->getId(), $news->getContent(), $news->getCreatedAt()])
             ->build();
-        echo $query->toRawSql();
+        echo "[INFO] Executing " . $query->toRawSql() . "\n";
 
-        $__ = [];
-        $error = $this->adapter->executeQuery($query, $__);
-
-        if ($error) {
-            throw new Exception("Failed to execute query: " . $query->toRawSql());
+        try
+        {
+            $__ = [];
+            $error = $this->adapter->executeQuery($query, $__);
+        }
+        catch (Exception $e)
+        {
+             # TODO : emit failed event
+            return null;
         }
 
-        var_dump($__);
-
+        $this->eventManager->notify(new EventNewsCreated($news));
         return $news;
     }
 
     /**
      * @throws Exception
      */
-    public function update(News $news): News
+    public function update(News|\App\Model\DataModel $news): News
     {
         $query = (new QueryBuilder())
             ->buildAction(QueryAction::UPDATE)
-            ->buildTable("News")
-            ->buildColumns(["id", "content", "created_at"])
+            ->buildTable(NEWS_TABLE)
+            ->buildColumns(NEWS_COLUMNS)
             ->buildValues([$news->getId(), $news->getContent(), $news->getCreatedAt()])
-            ->buildCondition("id", QueryCondition::IS_EQUAL, $news->getId()->getValue())
+            ->buildCondition(NEWS_COLUMN_ID, QueryCondition::IS_EQUAL, $news->getId()->getValue())
             ->build();
 
         $__ = [];
         $error = $this->adapter->executeQuery($query, $__);
 
-        if ($error) {
+        if ($error === false)
+        {
             throw new Exception("Failed to execute query: " . $query->toRawSql());
         }
 
@@ -82,7 +98,7 @@ final class NewsEntityManager
     /**
      * @throws Exception
      */
-    public function delete(News $news): void
+    public function delete(News|\App\Model\DataModel $news): void
     {
         if (!$news->getId() || !$news->getId()->getValue()) {
             throw new Exception("Invalid news ID for deletion.");
@@ -90,14 +106,15 @@ final class NewsEntityManager
 
         $query = (new QueryBuilder())
             ->buildAction(QueryAction::DELETE)
-            ->buildTable("News")
-            ->buildCondition("id", QueryCondition::IS_EQUAL, $news->getId()->getValue())
+            ->buildTable(NEWS_TABLE)
+            ->buildCondition(NEWS_COLUMN_ID, QueryCondition::IS_EQUAL, $news->getId()->getValue())
             ->build();
 
         $__ = [];
         $error = $this->adapter->executeQuery($query, $__);
 
-        if ($error !== false) {
+        if ($error === false)
+        {
             throw new Exception(
                 "Failed to execute query: " . $query->toRawSql() . " Error details: " . var_export(true, true)
             );
