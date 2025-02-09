@@ -56,6 +56,17 @@ final class CommandParser
         return $realPath !== false ? $realPath : $filename;
     }
 
+    public function parseArg(array $argv): string
+    {
+        // Check for the existence of the second command argument.
+        if (!isset($argv[2]))
+        {
+            throw new \InvalidArgumentException("Missing filename argument.");
+        }
+
+        return $argv[2];
+    }
+
 
     /**
      * Checks if a given path is absolute.

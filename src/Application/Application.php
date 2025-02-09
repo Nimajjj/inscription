@@ -60,11 +60,18 @@ final class Application
     public function main(): void
     {
         $command = $this->commandParser->parseCommand($this->launchArgv);
-        $filepath = $this->commandParser->parseFilename($this->launchArgv);
 
         try
         {
-            $data = JsonHandler::loadJsonFile($filepath);
+            if ($command != ApplicationCommand::DELETE)
+            {
+                $filepath = $this->commandParser->parseFilename($this->launchArgv);
+                $data = JsonHandler::loadJsonFile($filepath);
+            }
+            else
+            {
+                $data = $this->commandParser->parseArg($this->launchArgv);
+            }
         }
         catch (\Exception $e)
         {
@@ -151,18 +158,12 @@ final class Application
         echo "[ERROR] No user has been found with provided data" . PHP_EOL;
     }
 
-    private function deleteUser(array $data): void
+    private function deleteUser(string $id): void
     {
-        if (!JsonHandler::verifyKeys($data, ["id"]))
-        {
-            echo "[ERROR] Input file is invalid !" . PHP_EOL;
-            return;
-        }
-
         try
         {
-            $user = $this->userManager->getById(new UID($data["id"]));
-            echo "[DEBUG] " . $user . PHP_EOL;
+            $user = $this->userManager->getById(new UID($id));
+            echo "[ INFO] Deleting user " . $user . PHP_EOL;
             $this->userManager->delete($user);
         }
         catch (\Exception $e)
