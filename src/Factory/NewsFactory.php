@@ -14,7 +14,8 @@ final class NewsFactory implements IDataModelFactory
         string             $content,
         \DateTimeImmutable $createdAt
     ): News {
-        if (empty($content)) {
+        if (empty($content))
+        {
             throw new \InvalidArgumentException("Content is empty");
         }
         $news = new News();

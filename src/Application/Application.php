@@ -14,8 +14,10 @@ use App\Event\Events\EventUserCreated;
 use App\Event\Events\EventUserUpdated;
 use App\Event\Events\EventUserDeleted;
 use App\Event\IEvent;
+use App\Factory\NewsFactory;
+use App\Factory\UserFactory;
 use App\Model\User;
-use App\Model\Event;
+use App\Model\News;
 use App\VO\Uid;
 
 
@@ -27,6 +29,8 @@ final class Application
     private UserEntityManager $userManager;
     private EventManager $eventManager;
     private EmailManager $emailManager;
+    private NewsFactory $newsFactory;
+    private UserFactory $userFactory;
 
 
     public function __construct(array $argv)
@@ -45,8 +49,10 @@ final class Application
             ->subscribe(new EventNewsCreated(null), function(IEvent $event) { $this->onNewsCreated($event); });
 
         $this->newsManager = new NewsEntityManager($this->eventManager);
+        $this->newsFactory = new NewsFactory();
 
         $this->userManager = new UserEntityManager($this->eventManager);
+        $this->userFactory = new UserFactory();
 
         $this->emailManager = new EmailManager();
     }
@@ -175,14 +181,15 @@ final class Application
     private function onUserCreated(EventUserCreated $event): void
     {
         echo "[DEBUG] Event callback onUserCreated : " . $event->getUser() . PHP_EOL;
-
         $this->sendWelcomeEmail($event->getUser());
 
     }
 
-    private function onUserUpdated(): void
+    private function onUserUpdated(EventUserUpdated $event): void
     {
         echo "[DEBUG] Event callback onUserUpdated" . PHP_EOL;
+        $UPDATE_MESSAGE = "Your account has been updated";
+        $this->emailManager->send($event->getUser()->getEmail(), "Update", $UPDATE_MESSAGE);
     }
 
     private function onUserDeleted(): void
@@ -190,26 +197,48 @@ final class Application
         echo "[DEBUG] Event callback onUserDeleted" . PHP_EOL;
     }
 
-    private function onNewsCreated(): void
+    private function onNewsCreated(EventNewsCreated $event): void
     {
         echo "[DEBUG] Event callback onNewsCreated" . PHP_EOL;
+        $this->sendNewsEmail($event->getNews());
     }
 
     ###################### HELPERS ######################
     private function sendWelcomeEmail(User $user): void
     {
-        $WELCOM_MESSAGE_1 = "This is a welcome message for " . $user->getLogin() . PHP_EOL;
-        $WELCOM_MESSAGE_2 = "Say welcome to our new user : " . $user->getLogin() . PHP_EOL;
+        $WELCOME_MESSAGE_1 = "This is a welcome message for " . $user->getLogin() . PHP_EOL;
+        $WELCOME_MESSAGE_2 = "A new user joined us : " . $user->getLogin() . PHP_EOL;
 
-        $this->emailManager->send($user->getEmail(), "Welcome !", $WELCOM_MESSAGE_1);
+        $this->emailManager->send($user->getEmail(), "Welcome !", $WELCOME_MESSAGE_1);
+
+        $news = $this->newsFactory->createNews(
+            new Uid(),
+            $WELCOME_MESSAGE_2,
+            new \DateTimeImmutable("now")
+        );
+        $this->newsManager->create($news);
+    }
+
+    private function sendNewsEmail(News $news): void
+    {
+        $newUser = null;
+        $newsContent = $news->getContent();
+        $pattern = '/^A new user joined us : (.+)$/';
+        if (preg_match($pattern, $newsContent, $matches))
+        {
+            $newUser = $this->userManager->getByLogin(trim($matches[1]));
+        }
 
         foreach ($this->userManager->getAllEmails() as $email)
         {
-            if ($email == $user->getEmail())
+            // Exception for welcome mail
+            if ($newUser && $newUser->getEmail() == $email)
             {
+                echo "[DEBUG] skipping " . $email . PHP_EOL;
                 continue;
             }
-            $this->emailManager->send($email, "A new user as joined the team", $WELCOM_MESSAGE_2);
+
+            $this->emailManager->send($email, "A news has been published", $newsContent);
         }
     }
 }

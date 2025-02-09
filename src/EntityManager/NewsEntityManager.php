@@ -18,7 +18,6 @@ const NEWS_TABLE = "news";
 const NEWS_COLUMN_ID = "id";
 const NEWS_COLUMN_CONTENT = "content";
 const NEWS_COLUMN_CREATED_AT = "created_at";
-
 const NEWS_COLUMNS = [NEWS_COLUMN_ID, NEWS_COLUMN_CONTENT, NEWS_COLUMN_CREATED_AT];
 
 
