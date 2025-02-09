@@ -38,7 +38,7 @@ final class UserFactory implements IDataModelFactory {
     public function create(array $data): User
     {
         return $this->createUser(
-            isset($data['id']) ? new Uid($data['id']) : null,
+            isset($data['id']) ? new Uid($data['id']) : new Uid(),
             $data['login'] ?? '',
             $data['email'] ?? '',
             $data['password'] ?? '',

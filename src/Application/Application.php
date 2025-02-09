@@ -101,13 +101,7 @@ final class Application
             return;
         }
 
-        $user = new User(
-            null,
-            $data["login"],
-            $data["email"],
-            $data["password"],
-            null
-        );
+        $user = $this->userFactory->create($data);
 
         try
         {
